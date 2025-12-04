@@ -8,7 +8,11 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
   <style>
-    html, body, #map { height: 100%; margin: 0; padding: 0; direction: rtl; }
+    html, body, #map {
+      height: 100%; margin: 0; padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      direction: rtl;
+    }
     #resetBtn {
       position: absolute;
       top: 10px;
@@ -32,7 +36,7 @@
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
 <script>
-  // Khobar location
+  // Start map at Khobar
   const map = L.map('map').setView([26.2925, 50.2083], 13);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -47,13 +51,14 @@
   let drillState = null;
   let clusterGroup = null;
 
-  // Yellow bulb icon
-  const bulbIcon = L.icon({
-    iconUrl: 'https://i.ibb.co/8m1k9Tc/yellow-bulb.png', // yellow bulb image
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -32]
-  });
+  // Yellow circle style
+  const yellowCircleOptions = {
+    radius: 6,
+    color: '#FFD700',    // yellow border
+    fillColor: '#FFD700', // yellow fill
+    fillOpacity: 0.9,
+    weight: 1
+  };
 
   function clearMarkers() {
     if (clusterGroup) {
@@ -87,8 +92,13 @@
 
     dataToShow.forEach(d => {
       if (d.state && !isNaN(d.lat) && !isNaN(d.longitude)) {
-        const marker = L.marker([parseFloat(d.lat), parseFloat(d.longitude)], { icon: bulbIcon });
-        marker.bindTooltip(`<strong>${d.state}</strong>`, { direction: 'top', offset: [0, -16], sticky: true });
+        const marker = L.circleMarker([parseFloat(d.lat), parseFloat(d.longitude)], yellowCircleOptions);
+
+        marker.bindTooltip(`<strong>${d.state}</strong>`, {
+          direction: 'top',
+          offset: [0, -8],
+          sticky: true
+        });
 
         marker.on('click', () => {
           drillState = d.state;
@@ -123,7 +133,6 @@
       console.warn('⚠️ بيانات الحوادث غير صحيحة');
     }
   });
-
 </script>
 </body>
 </html>
